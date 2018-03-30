@@ -1,0 +1,40 @@
+<p>
+  appointments works!
+</p>
+<h1>Client Appointments</h1>
+
+<p>This component demonstrates fetching appointment data from the server.</p>
+
+<p *ngIf="!appointments"><em>Loading...</em></p>
+
+<table class='table table-responsive  table-striped table-lg' *ngIf="appointments">
+  <thead class="">
+    <tr>
+      <th>Client<br />ID</th>
+      <th>Client<br />First Name</th>
+      <th>Client<br />Last Name</th>
+      <th>Client<br />Birthday</th>
+      <th>Staff<br />First Name</th>
+      <th>Staff<br />Last Name</th>
+      <th>Staff<br />Specialty</th>
+      <th>Service<br />Line Start</th>
+      <th>Service<br />Line Ended</th>
+      <th>Service<br />Provided</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appointment of appointments">
+      <td>{{ appointment.id }}</td>
+      <td>{{ appointment.clientName }}</td>
+      <td>{{ appointment.clientLastName }}</td>
+      <td>{{ appointment.clientBirthday }}</td>
+      <td>{{ appointment.staffName }}</td>
+      <td>{{ appointment.staffLastName }}</td>
+      <td>{{ appointment.staffSpecialty }}</td>
+      <td>{{ appointment.serviceLine }}</td>
+      <td>{{ appointment.serviceLineStartDate }}</td>
+      <td>{{ appointment.serviceLineEndDate }}</td>
+    </tr>
+  </tbody>
+</table>

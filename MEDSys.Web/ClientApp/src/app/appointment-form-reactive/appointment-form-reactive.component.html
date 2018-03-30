@@ -1,0 +1,157 @@
+
+<h1>Reactive Form</h1>
+<form [formGroup]="appointmentForm" #formDir="ngForm">
+  <div [hidden]="formDir.submitted">
+    <div class="form-row">
+      <div class="col-md-4 mb-3">
+        <label for="clientName">Client: Name</label>
+        <input id="clientName" class="form-control"
+               formControlName="clientName" placeholder="Enter name" required>
+        <div *ngIf="clientName.invalid && (clientName.dirty || clientName.touched)"
+             class="alert alert-danger">
+          <div *ngIf="clientName.errors.required">
+            Client name is required.
+          </div>
+          <div *ngIf="clientName.errors.minlength">
+            Client name must be at least 2 characters long.
+          </div>
+          <div *ngIf="clientName.errors.forbiddenName">
+            Client name cannot be Bob.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="clientLastName">Last name</label>
+        <input id="clientLastName" class="form-control"
+               formControlName="clientLastName" placeholder="Enter last name" required>
+        <div *ngIf="clientLastName.invalid && (clientLastName.dirty || clientLastName.touched)"
+             class="alert alert-danger">
+          <div *ngIf="clientLastName.errors.required">
+            Client last name is required.
+          </div>
+          <div *ngIf="clientLastName.errors.minlength">
+            Client last name must be at least 2 characters long.
+          </div>
+          <div *ngIf="clientLastName.errors.forbiddenName">
+            Client last name cannot be Bob.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="clientBirthday">Birthday</label>
+        <input type="date" id="clientBirthday" class="form-control" [(ngModel)]="birthdate"
+               formControlName="clientBirthday" (blur)="checkAge()" required>
+        <div *ngIf="clientBirthday.invalid && (clientBirthday.dirty || clientBirthday.touched)"
+             class="alert alert-danger">
+          <div *ngIf="clientBirthday.errors.required">
+            Client birthday is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-4 mb-3">
+        <label for="staffName">Staff: Name</label>
+        <input id="staffName" class="form-control"
+               formControlName="staffName" placeholder="Enter name" required>
+        <div *ngIf="staffName.invalid && (staffName.dirty || staffName.touched)"
+             class="alert alert-danger">
+          <div *ngIf="staffName.errors.required">
+            Staff name is required.
+          </div>
+          <div *ngIf="staffName.errors.minlength">
+            Staff name must be at least 2 characters long.
+          </div>
+          <div *ngIf="staffName.errors.forbiddenName">
+            Staff name cannot be Bob.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="staffLastName">Last name</label>
+        <input id="staffLastName" class="form-control"
+               formControlName="staffLastName" placeholder="Enter last name" required>
+        <div *ngIf="staffLastName.invalid && (staffLastName.dirty || staffLastName.touched)"
+             class="alert alert-danger">
+          <div *ngIf="staffLastName.errors.required">
+            Staff last name is required.
+          </div>
+          <div *ngIf="staffLastName.errors.minlength">
+            Staff last name must be at least 2 characters long.
+          </div>
+          <div *ngIf="staffLastName.errors.forbiddenName">
+            Staff last name cannot be Bob.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="staffSpecialty">Specialization</label>
+        <select id="staffSpecialty" class="form-control"
+                formControlName="staffSpecialty" required [(required)]="requireSpecialty" placeholder="Specializes in...">
+          <option *ngFor="let s of specialties" [value]="s">{{s}}</option>
+        </select>
+        <div *ngIf="staffSpecialty.invalid && (staffSpecialty.dirty || staffSpecialty.touched)" class="alert alert-danger">
+
+            <div *ngIf="staffSpecialty.errors.required && (staffSpecialty.errors.forbiddenName && requireSpecialty ? true : false)">
+              Client is over 70 years old and requires <strong> Geriatrics </strong> specialization.
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-4 mb-3">
+        <label for="serviceLine">Service Line: Details</label>
+        <input id="serviceLine" class="form-control"
+               formControlName="serviceLine" placeholder="Describe client services rendered..." required>
+        <div *ngIf="serviceLine.invalid && (serviceLine.dirty || serviceLine.touched)"
+             class="alert alert-danger">
+          <div *ngIf="serviceLine.errors.required">
+            Service line is required.
+          </div>
+          <div *ngIf="serviceLine.errors.minlength">
+            Service line must be at least 10 characters long.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="serviceLineStartDate">Started</label>
+        <input type="datetime-local" id="serviceLineStartDate" class="form-control"
+               formControlName="serviceLineStartDate" required>
+        <div *ngIf="serviceLineStartDate.invalid && (serviceLineStartDate.dirty || serviceLineStartDate.touched)"
+             class="alert alert-danger">
+          <div *ngIf="serviceLineStartDate.errors.required">
+            Service line start date is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="serviceLineEndDate">Ended</label>
+        <input type="datetime-local" id="serviceLineEndDate" class="form-control"
+               formControlName="serviceLineEndDate" required>
+        <div *ngIf="serviceLineEndDate.invalid && (serviceLineEndDate.dirty || serviceLineEndDate.touched)"
+             class="alert alert-danger">
+          <div *ngIf="serviceLineEndDate.errors.required">
+            Service line end date is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <button (click)="save(appointmentForm.value)" class="btn btn-default"
+            [disabled]="appointmentForm.invalid">
+      Submit
+    </button>
+    <button type="button" class="btn btn-default"
+            (click)="formDir.resetForm({})">
+      Reset
+    </button>
+  </div>
+</form>
+<div class="submitted-message" *ngIf="formDir.submitted">
+  <p>You've submitted client, {{ appointmentForm.value.clientName }}!</p>
+  <button (click)="formDir.resetForm({})">Add new client</button>
+</div>
+<p>Form value: {{ appointmentForm.value | json }}</p>
+
+<h2>{{ birthdate }} Details</h2>
+<h2>{{ requireSpecialty}} Specialty</h2>
+<h2>{{ appointment }} appointment</h2>
