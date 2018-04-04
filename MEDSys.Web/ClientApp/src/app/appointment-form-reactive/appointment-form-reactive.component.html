@@ -91,9 +91,12 @@
           <option *ngFor="let s of specialties" [value]="s">{{s}}</option>
         </select>
         <div *ngIf="staffSpecialty.invalid && staffSpecialty.touched " class="alert alert-danger">
-            <div *ngIf="staffSpecialty.errors.required && staffSpecialty.errors.forbiddenName">
-              Client is over 70 years old and requires <strong> Geriatrics </strong> specialization.
-            </div>
+          <div *ngIf="serviceLine.errors.required">
+            Specialization is required.
+          </div>
+          <div *ngIf="staffSpecialty.errors.forbiddenName">
+            Client is over 70 years old and requires <strong> Geriatrics </strong> .
+          </div>
         </div>
       </div>
     </div>
