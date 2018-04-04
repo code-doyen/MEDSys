@@ -40,7 +40,7 @@
       <div class="col-md-4 mb-3">
         <label for="clientBirthday">Birthday</label>
         <input type="date" id="clientBirthday" class="form-control" [(ngModel)]="birthdate"
-               formControlName="clientBirthday" (blur)="checkAge()" required>
+               formControlName="clientBirthday" (blur)="checkAge()" required min="1900-01-01" max="9999-12-31">
         <div *ngIf="clientBirthday.invalid && (clientBirthday.dirty || clientBirthday.touched)"
              class="alert alert-danger">
           <div *ngIf="clientBirthday.errors.required">
@@ -118,7 +118,7 @@
       <div class="col-md-4 mb-3">
         <label for="serviceLineStartDate">Started</label>
         <input type="datetime-local" id="serviceLineStartDate" class="form-control"
-               formControlName="serviceLineStartDate" required>
+               formControlName="serviceLineStartDate" required min="1900-01-01T00:00" max="9999-12-31T23:59">
         <div *ngIf="serviceLineStartDate.invalid && (serviceLineStartDate.dirty || serviceLineStartDate.touched)"
              class="alert alert-danger">
           <div *ngIf="serviceLineStartDate.errors.required">
@@ -129,7 +129,7 @@
       <div class="col-md-4 mb-3">
         <label for="serviceLineEndDate">Ended</label>
         <input type="datetime-local" id="serviceLineEndDate" class="form-control"
-               formControlName="serviceLineEndDate" required>
+               formControlName="serviceLineEndDate" required min="1900-01-01T00:00" max="9999-12-31T23:59">
         <div *ngIf="serviceLineEndDate.invalid && (serviceLineEndDate.dirty || serviceLineEndDate.touched)"
              class="alert alert-danger">
           <div *ngIf="serviceLineEndDate.errors.required">
