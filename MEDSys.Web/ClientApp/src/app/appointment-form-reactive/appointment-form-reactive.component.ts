@@ -13,11 +13,10 @@ import { AppointmentService } from '../services/appointment.service';
 })
 export class AppointmentFormReactiveComponent implements OnInit {
   private specialties = ['None', 'CPR', 'Geriatrics'];
-  public birthdate: String;
-  public requireSpecialty: Boolean
+  private birthdate: String;
   private appointmentForm: FormGroup;
-  
-  constructor(private appointmentService: AppointmentService) { this.requireSpecialty = false; }
+ 
+  constructor(private appointmentService: AppointmentService) {  }
 
   ngOnInit(): void {
     this.appointmentForm = new FormGroup({
@@ -44,8 +43,7 @@ export class AppointmentFormReactiveComponent implements OnInit {
       ]),
       'staffSpecialty': new FormControl(this.specialties[0], [
         Validators.required,
-        forbiddenNameValidator(/\bcpr\b|\bnone\b/i), // <-- Here's how you pass in the custom validator.
-
+        forbiddenNameValidator(/-/i) // <-- Here's how you pass in the custom validator.
       ]),
       'serviceLine': new FormControl('',[
         Validators.required,
@@ -68,12 +66,8 @@ export class AppointmentFormReactiveComponent implements OnInit {
 
 
   checkAge(): void {
-    if (this.birthdate == null) {
-      this.requireSpecialty = false
-    }
-    else {
-      let b = this.birthdate.toString().split("-")
-
+    if (this.birthdate != null) {
+      let b = this.birthdate.toString().split("-");
       let birthMonth = Number.parseInt(b[1]);
       let birthDay = Number.parseInt(b[2]);
       let birthYear = Number.parseInt(b[0]);
@@ -88,8 +82,21 @@ export class AppointmentFormReactiveComponent implements OnInit {
       if (birthMonth - 1 == currMonth && currDay < birthDay) {
         age--;
       }
-      console.log(age);
-      this.requireSpecialty = age > 70;
+      if (age > 70) {
+        this.appointmentForm.setControl(
+          'staffSpecialty', new FormControl(this.specialties[2], [
+            Validators.required,
+            forbiddenNameValidator(/\bcpr\b|\bnone\b/i) // <-- Here's how you pass in the custom validator.
+          ]));
+
+      }
+      else {
+        this.appointmentForm.setControl(
+          'staffSpecialty', new FormControl(this.specialties[0], [
+          Validators.required,
+          forbiddenNameValidator(/-/i), // <-- Here's how you pass in the custom validator.
+        ]));
+      }
     }
   }
 

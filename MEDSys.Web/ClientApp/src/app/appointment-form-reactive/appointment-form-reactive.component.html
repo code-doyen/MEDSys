@@ -1,5 +1,5 @@
 
-<h1>Reactive Form</h1>
+<h1>Create Appointment</h1>
 <form [formGroup]="appointmentForm" #formDir="ngForm">
   <div [hidden]="formDir.submitted">
     <div class="form-row">
@@ -87,12 +87,11 @@
       <div class="col-md-4 mb-3">
         <label for="staffSpecialty">Specialization</label>
         <select id="staffSpecialty" class="form-control"
-                formControlName="staffSpecialty" required [(required)]="requireSpecialty" placeholder="Specializes in...">
+                formControlName="staffSpecialty" placeholder="Specializes in..." required>
           <option *ngFor="let s of specialties" [value]="s">{{s}}</option>
         </select>
-        <div *ngIf="staffSpecialty.invalid && (staffSpecialty.dirty || staffSpecialty.touched)" class="alert alert-danger">
-
-            <div *ngIf="staffSpecialty.errors.required && (staffSpecialty.errors.forbiddenName && requireSpecialty ? true : false)">
+        <div *ngIf="staffSpecialty.invalid && staffSpecialty.touched " class="alert alert-danger">
+            <div *ngIf="staffSpecialty.errors.required && staffSpecialty.errors.forbiddenName">
               Client is over 70 years old and requires <strong> Geriatrics </strong> specialization.
             </div>
         </div>
@@ -152,6 +151,3 @@
 </div>
 <p>Form value: {{ appointmentForm.value | json }}</p>
 
-<h2>{{ birthdate }} Details</h2>
-<h2>{{ requireSpecialty}} Specialty</h2>
-<h2>{{ appointment }} appointment</h2>

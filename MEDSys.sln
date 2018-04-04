@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEDSys.Web", "MEDSys.Web\ME
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEDSys.Api", "MEDSys.Api\MEDSys.Api.csproj", "{6FA04A52-BC80-45C5-8990-5F055CFD1E4E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEDSys.Test", "MEDSys.Test\MEDSys.Test.csproj", "{3ED820A3-1F11-418C-AD8D-3DF65D49C638}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6FA04A52-BC80-45C5-8990-5F055CFD1E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA04A52-BC80-45C5-8990-5F055CFD1E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA04A52-BC80-45C5-8990-5F055CFD1E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ED820A3-1F11-418C-AD8D-3DF65D49C638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ED820A3-1F11-418C-AD8D-3DF65D49C638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ED820A3-1F11-418C-AD8D-3DF65D49C638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ED820A3-1F11-418C-AD8D-3DF65D49C638}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,65 +1,166 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using MEDSys.Api.Data;
+using MEDSys.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MEDSys.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class AppointmentController : Controller
     {
-        private static string[] Summaries = new[]
-       {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching", "Blazing"
-        };
-
+        private readonly AppointmentContext _context = new AppointmentContext();
+        
         [HttpGet]
-        public IEnumerable<Appointment> Appointments()
+        public async Task<IActionResult> Appointments()
         {
-            int i = 0;
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new Appointment
+
+            var resultSet = await _context.AppointmentQueries.ToListAsync<Appointment>();
+
+            if (resultSet == null)
             {
-                Id = ++i,
-                ClientName = Summaries[rng.Next(Summaries.Length)],
-                ClientLastName = Summaries[rng.Next(Summaries.Length)],
-                ClientBirthday = Summaries[rng.Next(Summaries.Length)],
-                StaffName = Summaries[rng.Next(Summaries.Length)],
-                StaffLastName = Summaries[rng.Next(Summaries.Length)],
-                StaffSpecialty = Summaries[rng.Next(Summaries.Length)],
-                ServiceLine = Summaries[rng.Next(Summaries.Length)],
-                ServiceLineStartDate = Summaries[rng.Next(Summaries.Length)],
-                ServiceLineEndDate = Summaries[rng.Next(Summaries.Length)]
-            });
+                return NotFound();
+            }
+            return Ok(resultSet);
 
         }
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "amazin", "value2" };
-        }
+      
         [HttpPost]
-        public IActionResult AddAppointment([FromBody]Appointment appointment)
+        public IActionResult AddAppointment([FromBody] Appointment payload)
         {
-            
-            return Ok(appointment);
+            using (var db = new AppointmentContext())
+            {
+
+                DateTime betweenStartDate = new DateTime(payload.ServiceLineStartDate.Year, payload.ServiceLineStartDate.Month, payload.ServiceLineStartDate.Day, 0, 0, 0);
+                DateTime betweenEndDate = new DateTime(payload.ServiceLineStartDate.Year, payload.ServiceLineStartDate.Month, payload.ServiceLineStartDate.Day, 23, 59, 59);
+                int numberOfDays = (int)(payload.ServiceLineEndDate - payload.ServiceLineStartDate).TotalDays;
+               
+                Console.WriteLine(numberOfDays);
+                //service occurred same day.
+                if (numberOfDays <= 1)
+                {
+                    if ((payload.ServiceLineEndDate.Day > payload.ServiceLineStartDate.Day ||
+                                  payload.ServiceLineEndDate.Month > payload.ServiceLineStartDate.Month ||
+                                  payload.ServiceLineEndDate.Year > payload.ServiceLineStartDate.Year))
+                    {
+
+                        db.AppointmentQueries.Add(new Appointment
+                        {
+
+                            ServiceLineStartDate = payload.ServiceLineStartDate, //DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)              
+                            ServiceLineEndDate = new DateTime(payload.ServiceLineStartDate.Year, payload.ServiceLineStartDate.Month, payload.ServiceLineStartDate.Day, 23, 59, 59),
+                            ServiceLine = payload.ServiceLine,
+                            ClientName = payload.ClientName,
+                            ClientLastName = payload.ClientLastName,
+                            ClientBirthday = payload.ClientBirthday,
+                            StaffName = payload.StaffName,
+                            StaffLastName = payload.StaffLastName,
+                            StaffSpecialty = payload.StaffSpecialty
+
+                        });
+                        db.AppointmentQueries.Add(new Appointment
+                        {
+                            //DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
+                            ServiceLineStartDate = new DateTime(payload.ServiceLineEndDate.Year, payload.ServiceLineEndDate.Month, payload.ServiceLineEndDate.Day, 0, 0, 0),
+                            ServiceLineEndDate = payload.ServiceLineEndDate,
+                            ServiceLine = payload.ServiceLine,
+                            ClientName = payload.ClientName,
+                            ClientLastName = payload.ClientLastName,
+                            ClientBirthday = payload.ClientBirthday,
+                            StaffName = payload.StaffName,
+                            StaffLastName = payload.StaffLastName,
+                            StaffSpecialty = payload.StaffSpecialty
+
+                        });
+                    }
+                    else
+                    {
+
+                        db.AppointmentQueries.Add(new Appointment
+                        {
+
+                            ServiceLineStartDate = payload.ServiceLineStartDate,
+                            ServiceLineEndDate = payload.ServiceLineEndDate,
+                            ServiceLine = payload.ServiceLine,
+                            ClientName = payload.ClientName,
+                            ClientLastName = payload.ClientLastName,
+                            ClientBirthday = payload.ClientBirthday,
+                            StaffName = payload.StaffName,
+                            StaffLastName = payload.StaffLastName,
+                            StaffSpecialty = payload.StaffSpecialty
+
+                        });
+                    }
+                }
+                else
+                {
+                    for (int daysLapsed = 0; daysLapsed <= numberOfDays; daysLapsed++)
+                    {
+                        if (daysLapsed == 0)
+                        {
+                            db.AppointmentQueries.Add(new Appointment
+                            {
+                                    
+                                ServiceLineStartDate = payload.ServiceLineStartDate, //DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)              
+                                ServiceLineEndDate = new DateTime(payload.ServiceLineStartDate.Year, payload.ServiceLineStartDate.Month, payload.ServiceLineStartDate.Day, 23, 59, 59),
+                                ServiceLine = payload.ServiceLine,
+                                ClientName = payload.ClientName,
+                                ClientLastName = payload.ClientLastName,
+                                ClientBirthday = payload.ClientBirthday,
+                                StaffName = payload.StaffName,
+                                StaffLastName = payload.StaffLastName,
+                                StaffSpecialty = payload.StaffSpecialty
+
+                            });
+                        }
+                        else if (daysLapsed < numberOfDays) 
+                        {
+                            db.AppointmentQueries.Add(new Appointment
+                            {
+
+                                ServiceLineStartDate = betweenStartDate,
+                                ServiceLineEndDate = betweenEndDate,
+                                ServiceLine = payload.ServiceLine,
+                                ClientName = payload.ClientName,
+                                ClientLastName = payload.ClientLastName,
+                                ClientBirthday = payload.ClientBirthday,
+                                StaffName = payload.StaffName,
+                                StaffLastName = payload.StaffLastName,
+                                StaffSpecialty = payload.StaffSpecialty
+
+                            });
+                        }
+                        else
+                        {
+                            db.AppointmentQueries.Add(new Appointment
+                            {
+                                //DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
+                                ServiceLineStartDate = new DateTime(payload.ServiceLineEndDate.Year, payload.ServiceLineEndDate.Month, payload.ServiceLineEndDate.Day, 0, 0, 0),
+                                ServiceLineEndDate = payload.ServiceLineEndDate,
+                                ServiceLine = payload.ServiceLine,
+                                ClientName = payload.ClientName,
+                                ClientLastName = payload.ClientLastName,
+                                ClientBirthday = payload.ClientBirthday,
+                                StaffName = payload.StaffName,
+                                StaffLastName = payload.StaffLastName,
+                                StaffSpecialty = payload.StaffSpecialty
+
+                            });
+                        }
+                        betweenStartDate = betweenStartDate.AddDays(1);
+                        betweenEndDate = betweenEndDate.AddDays(1);
+                    }
+                }
+                //db.Database.ExecuteSqlCommand("UPDATE Service SET ClientID={0} WHERE ServiceID={0}", cnt);
+                var count = db.SaveChanges();
+                Console.WriteLine("{0} records saved to database", count);
+                Console.WriteLine();
+                
+            }
+            return Ok("Client Appointment scheduled");
         }
 
-        public class Appointment
-        {
-            public int Id { get; set; }
-            public string ClientName{ get; set; }
-            public string ClientLastName{ get; set; }
-            public string ClientBirthday{ get; set; }
-            public string StaffName{ get; set; }
-            public string StaffLastName{ get; set; }
-            public string StaffSpecialty{ get; set; }
-            public string ServiceLine{ get; set; }
-            public string ServiceLineStartDate{ get; set; }
-            public string ServiceLineEndDate{ get; set; }
-        }
 
 
         //// GET api/values/5

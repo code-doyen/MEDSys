@@ -1,5 +1,5 @@
 export interface Appointment {
-  id: number,
+  appointmentID: number,
   clientName: string,
   clientLastName: string,
   clientBirthday: string,
@@ -7,6 +7,6 @@ export interface Appointment {
   staffLastName: string,
   staffSpecialty: string,
   serviceLine: string,
-  serviceLineStartDate: string,
-  serviceLineEndDate: string
+  serviceLineStartDate: DateTimeFormat,
+  serviceLineEndDate: DateTimeFormat
 }
