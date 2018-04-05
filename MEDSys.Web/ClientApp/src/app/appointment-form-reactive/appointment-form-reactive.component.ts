@@ -88,7 +88,6 @@ export class AppointmentFormReactiveComponent implements OnInit {
             Validators.required,
             forbiddenNameValidator(/\bcpr\b|\bnone\b/i) // <-- Here's how you pass in the custom validator.
           ]));
-        this.appointmentForm.markAsUntouched();
       }
       else {
         this.appointmentForm.setControl(
